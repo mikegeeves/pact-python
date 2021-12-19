@@ -129,7 +129,7 @@ class PactTestCase(TestCase):
         self.assertTrue('description' not in target._interactions[0])
 
         # By using "with", __enter__ will call the setup method that will verify if this is present
-        with self.assertRaises(AssertionError) as e:
+        with self.assertRaises(AssertionError):
             with target:
                 target.verify()
 
