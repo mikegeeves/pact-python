@@ -188,8 +188,6 @@ class Pact(Broker):
             assert resp.status_code == 200, resp.text
         except AssertionError:
             raise
-        pass
-        x=1
 
     def start_service(self):
         """
