@@ -117,8 +117,6 @@ class PactTestCase(TestCase):
         self.assertEqual(target._interactions[0]['response'],
                          {'status': 200, 'body': 'success'})
 
-
-
     def test_definition_all_options(self):
         target = Pact(self.consumer, self.provider)
         (target
