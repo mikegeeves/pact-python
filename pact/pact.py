@@ -165,6 +165,11 @@ class Pact(Broker):
     def setup(self):
         """Configure the Mock Service to ready it for a test."""
         try:
+            # First, check that the interactions are all complete
+            for interaction in self._interactions:
+                for field in self.MANDATORY_FIELDS:
+                    assert field in interaction, f"Interaction incomplete, missing field: {field}"
+
             interactions_uri = f"{self.uri}/interactions"
             resp = requests.delete(
                 interactions_uri, headers=self.HEADERS, verify=False

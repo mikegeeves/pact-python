@@ -116,6 +116,23 @@ class PactTestCase(TestCase):
         self.assertEqual(target._interactions[0]['response'],
                          {'status': 200, 'body': 'success'})
 
+    def test_definition_without_description(self):
+        # Description (populated from "given") is listed in the MANDATORY_FIELDS.
+        # Make sure if it isn't there that an exception is raised
+        target = Pact(self.consumer, self.provider)
+        (target.given("A request without a description")
+            .with_request('GET', '/path')
+            .will_respond_with(200, body='success'))
+
+        self.assertEqual(len(target._interactions), 1)
+
+        self.assertTrue('description' not in target._interactions[0])
+
+        # By using "with", __enter__ will call the setup method that will verify if this is present
+        with self.assertRaises(AssertionError) as e:
+            with target:
+                target.verify()
+
     def test_definition_all_options(self):
         target = Pact(self.consumer, self.provider)
         (target
