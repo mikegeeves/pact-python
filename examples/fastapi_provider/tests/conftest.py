@@ -62,7 +62,7 @@ def publish_existing_pact(broker):
         remove=True,
         network="broker_default",
         volumes=pacts,
-        image="pactfoundation/pact-cli:latest",
+        image="pactfoundation/pact-cli:0.50.0.16",
         environment=envs,
         command="publish /pacts --consumer-app-version 1",
     )
