@@ -1,4 +1,5 @@
 import pathlib
+import time
 
 import docker
 import pytest
@@ -77,6 +78,7 @@ def broker(request):
             print("{}".format(stdout))
             print("Started broker")
 
+            time.sleep(2)
             yield
             print("Stopping broker")
         print("Broker stopped")

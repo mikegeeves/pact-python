@@ -1,5 +1,6 @@
 import pathlib
 import sys
+import time
 from multiprocessing import Process
 
 import docker
@@ -95,6 +96,7 @@ def broker(request):
             print("{}".format(stdout))
             print("Started broker")
 
+            time.sleep(2)
             yield
             print("Stopping broker")
         print("Broker stopped")

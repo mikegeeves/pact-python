@@ -1,3 +1,5 @@
+import time
+
 from testcontainers.compose import DockerCompose
 
 import pytest
@@ -39,4 +41,5 @@ def broker(request):
             if stderr:
                 print("Errors\\n:{}".format(stderr))
             print(stdout)
+            time.sleep(2)
             yield
