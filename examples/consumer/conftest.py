@@ -1,3 +1,5 @@
+import time
+
 import pytest
 from testcontainers.compose import DockerCompose
 
@@ -33,6 +35,9 @@ def broker(request):
         # Start up the broker using docker-compose
         print("Starting broker")
         with DockerCompose("../broker", compose_file_name=["docker-compose.yml"], pull=True) as compose:
+            print("Going to wait before getting logs")
+            time.sleep(10)
+            print("Finished sleeping")
             stdout, stderr = compose.get_logs()
             if stderr:
                 print("Errors\\n:{}".format(stderr))
