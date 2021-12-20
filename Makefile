@@ -94,7 +94,8 @@ messaging:
 
 
 .PHONY: examples
-examples: consumer flask fastapi messaging
+examples: consumer
+#flask fastapi messaging
 
 
 .PHONY: package
