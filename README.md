@@ -483,16 +483,10 @@ or
 - Twitter: [@pact_up](https://twitter.com/pact_up)
 - Stack Overflow: [stackoverflow.com/questions/tagged/pact](https://stackoverflow.com/questions/tagged/pact)
 
-[bundler]: http://bundler.io/
 [context manager]: https://en.wikibooks.org/wiki/Python_Programming/Context_Managers
-[Pact]: https://docs.pact.io
 [Pact Broker]: https://docs.pact.io/pact_broker
 [Pact documentation]: https://docs.pact.io/
-[Pact Mock Service]: https://github.com/pact-foundation/pact-mock_service
 [Pact specification]: https://github.com/pact-foundation/pact-specification
 [Provider States]: https://docs.pact.io/getting_started/provider_states
-[pact-provider-verifier]: https://github.com/pact-foundation/pact-provider-verifier
 [pyenv]: https://github.com/pyenv/pyenv
-[rvm]: https://rvm.io/
-[rbenv]: https://github.com/rbenv/rbenv
 [virtualenv]: http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/
