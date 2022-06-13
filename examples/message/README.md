@@ -4,6 +4,8 @@ This is an e2e example that uses messages, including a sample implementation of 
 
 The use case being demonstrated is ????
 
+TODO: Complete updating with the pact-js [Message Pact Examples](https://github.com/pact-foundation/pact-js/tree/master/examples/messages)
+
 ```mermaid
 flowchart LR
     subgraph Message Provider

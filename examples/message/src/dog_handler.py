@@ -7,14 +7,17 @@ class CustomError(Exception):
 
     def __str__(self):
         if self.topic:
-            return "Custom Error: {0}".format(self.topic)
+            return f"Custom Error: {self.topic}"
 
 
-class MessageHandler(object):
+class DogHandler(object):
     def __init__(self, event):
         self.pass_event(event)
 
     @staticmethod
     def pass_event(event):
-        if event.get("documentType") != "microsoft-word":
-            raise CustomError("Incorrect document type")
+        if not all([x in event.keys() for x in ["id", "name", "type"]]):
+            raise CustomError("missing fields")
+
+        # do some other things to dog...
+        # e.g. dogRepository.save(dog)

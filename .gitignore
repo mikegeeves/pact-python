@@ -2,6 +2,7 @@
 e2e/pacts
 userserviceclient-userservice.json
 detectcontentlambda-contentprovider.json
+mypythonmessageconsumer-mypythonmessageprovider.json
 pact/bin
 
 # Byte-compiled / optimized / DLL files
