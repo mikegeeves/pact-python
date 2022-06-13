@@ -20,8 +20,10 @@ PACT_DIR = "pacts"
 
 CONSUMER_NAME = "DetectContentLambda"
 PROVIDER_NAME = "ContentProvider"
-PACT_FILE = (f"{PACT_DIR}/{CONSUMER_NAME.lower().replace(' ', '_')}-"
-             + f"{PROVIDER_NAME.lower().replace(' ', '_')}.json")
+PACT_FILE = (
+    f"{PACT_DIR}/{CONSUMER_NAME.lower().replace(' ', '_')}-"
+    + f"{PROVIDER_NAME.lower().replace(' ', '_')}.json"
+)
 
 
 @pytest.fixture(scope="session")
@@ -31,8 +33,12 @@ def pact(request):
 
     pact = MessageConsumer(CONSUMER_NAME, version=version).has_pact_with(
         Provider(PROVIDER_NAME),
-        publish_to_broker=publish, broker_base_url=PACT_BROKER_URL,
-        broker_username=PACT_BROKER_USERNAME, broker_password=PACT_BROKER_PASSWORD, pact_dir=PACT_DIR)
+        publish_to_broker=publish,
+        broker_base_url=PACT_BROKER_URL,
+        broker_username=PACT_BROKER_USERNAME,
+        broker_password=PACT_BROKER_PASSWORD,
+        pact_dir=PACT_DIR,
+    )
 
     yield pact
 
@@ -41,7 +47,7 @@ def cleanup_json(file):
     """
     Remove existing json file before test if any
     """
-    if (isfile(f"{file}")):
+    if isfile(f"{file}"):
         remove(f"{file}")
 
 
@@ -69,16 +75,15 @@ def test_throw_exception_handler(pact):
         "event": "ObjectCreated:Put",
         "documentName": "spreadsheet.xls",
         "creator": "WI",
-        "documentType": "microsoft-excel"
+        "documentType": "microsoft-excel",
     }
 
-    (pact
-     .given("Document unsupported type")
-     .expects_to_receive("Description")
-     .with_content(wrong_event)
-     .with_metadata({
-         "Content-Type": "application/json"
-     }))
+    (
+        pact.given("Document unsupported type")
+        .expects_to_receive("Description")
+        .with_content(wrong_event)
+        .with_metadata({"Content-Type": "application/json"})
+    )
 
     with pytest.raises(CustomError):
         with pact:
@@ -96,16 +101,15 @@ def test_put_file(pact):
         "event": "ObjectCreated:Put",
         "documentName": "document.doc",
         "creator": "TP",
-        "documentType": "microsoft-word"
+        "documentType": "microsoft-word",
     }
 
-    (pact
-     .given("A document created successfully")
-     .expects_to_receive("Description")
-     .with_content(expected_event)
-     .with_metadata({
-         "Content-Type": "application/json"
-     }))
+    (
+        pact.given("A document created successfully")
+        .expects_to_receive("Description")
+        .with_content(expected_event)
+        .with_metadata({"Content-Type": "application/json"})
+    )
 
     with pact:
         MessageHandler(expected_event)
@@ -119,26 +123,22 @@ def test_publish_to_broker(pact):
     This test does not clean-up previously generated pact.
     Sample execution where 2 is an arbitrary version:
 
-    `pytest tests/consumer/test_message_consumer.py::test_publish_pact_to_broker`
-
-    `pytest tests/consumer/test_message_consumer.py::test_publish_pact_to_broker --publish-pact 2`
+    `pytest tests/consumer/test_message_consumer.py::test_publish_to_broker`
+    `pytest tests/consumer/test_message_consumer.py::test_publish_to_broker --publish-pact 2`
     """
-    cleanup_json(PACT_FILE)
-
     expected_event = {
         "event": "ObjectCreated:Delete",
         "documentName": "document.doc",
         "creator": "TP",
-        "documentType": "microsoft-word"
+        "documentType": "microsoft-word",
     }
 
-    (pact
-     .given("A document deleted successfully")
-     .expects_to_receive("Description with broker")
-     .with_content(expected_event)
-     .with_metadata({
-         "Content-Type": "application/json"
-     }))
+    (
+        pact.given("A document deleted successfully")
+        .expects_to_receive("Description with broker")
+        .with_content(expected_event)
+        .with_metadata({"Content-Type": "application/json"})
+    )
 
     with pact:
         MessageHandler(expected_event)
