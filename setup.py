@@ -96,7 +96,7 @@ class PactPythonInstallCommand(install):
         install_ruby_app(package_bin_path, self.bin_path)
 
 
-def install_ruby_app(package_bin_path:str, download_bin_path=None):
+def install_ruby_app(package_bin_path: str, download_bin_path=None):
     """
     Installs the ruby standalone application for this OS.
 
