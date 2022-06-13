@@ -2,21 +2,48 @@
 
 This is an e2e example that uses messages, including a sample implementation of a message handler.
 
+The use case being demonstrated is ????
+
+```mermaid
+flowchart LR
+    subgraph Message Provider
+    A[Document Upload Service]
+    end
+
+    subgraph Pact
+    B[MQ/broker]
+    end
+
+    subgraph Message Consumer
+    C[Lambda Function check valid doc]
+    end
+
+    A --> |message| B
+    B --> |message| C
+```
+
 ## Consumer
 
 A Consumer is the system that will be reading a message from a queue or some intermediary. In this example, the consumer is a Lambda function that handles the message.
 
 From a Pact testing point of view, Pact takes the place of the intermediary (MQ/broker etc.) and confirms whether or not the consumer is able to handle a request.
 
-```
-+-----------+          +-------------------+
-| (Pact)    | message  |(Message Consumer) |
-| MQ/broker |--------->|Lambda Function    |
-|           |          |check valid doc    |
-+-----------+          +-------------------+
-```
+```mermaid
+flowchart LR
+    subgraph Pact
+    B[MQ/broker]
+    end
 
+    subgraph Message Consumer
+    C[Lambda Function check valid doc]
+    end
+
+    B --> |message| C
+```
 Below is a sample message handler that only accepts that the key `documentType` would only be `microsoft-word`. If not, the message handler will throw an exception (`CustomError`)
+
+<details open>
+<summary>MessageHandler and CustomError</summary>
 
 ```python
 class CustomError(Exception):
@@ -40,13 +67,16 @@ class MessageHandler(object):
             raise CustomError("Not correct document type")
 ```
 
+</details>
+
 Below is a snippet from a test where the message handler has no error.
 Since the expected event contains a key `documentType` with value `microsoft-word`, message handler does not throw an error and a pact file `f"{PACT_FILE}""` is expected to be generated.
 
+<details open>
+<summary>Successful test</summary>
+
 ```python
 def test_generate_new_pact_file(pact):
-    cleanup_json(PACT_FILE)
-
     expected_event = {
         'documentName': 'document.doc',
         'creator': 'TP',
@@ -65,11 +95,14 @@ def test_generate_new_pact_file(pact):
         # handler needs 'documentType' == 'microsoft-word'
         MessageHandler(expected_event)
 
-    progressive_delay(f"{PACT_FILE}")
-    assert isfile(f"{PACT_FILE}") == 1
 ```
 
+</details>
+
 For a similar test where the event does not contain a key `documentType` with value `microsoft-word`, a `CustomError` is generated and there there is no generated json file `f"{PACT_FILE}"`.
+
+<details open>
+<summary>Unsuccessful test</summary>
 
 ```python
 def test_throw_exception_handler(pact):
@@ -97,15 +130,23 @@ def test_throw_exception_handler(pact):
     assert isfile(f"{PACT_FILE}") == 0
 ```
 
+</details>
+
 ## Provider
 
+```mermaid
+flowchart LR
+    subgraph Message Provider
+    A[Document Upload Service]
+    end
+
+    subgraph Pact
+    B[MQ/broker]
+    end
+
+    A --> |message| B
 ```
-+-------------------+          +-----------+
-|(Message Provider) | message  | (Pact)    |
-|Document Upload    |--------->| MQ/broker |
-|Service            |          |           |
-+-------------------+          +-----------+
-```
+
 
 ```python
 import pytest
@@ -180,16 +221,6 @@ def test_verify_from_broker(default_opts):
         with provider:
             provider.verify_with_broker(**default_opts)
 
-```
-
-## E2E Messaging
-
-```
-+-------------------+          +-----------+          +-------------------+
-|(Message Provider) | message  | (Pact)    | message  |(Message Consumer) |
-|Document Upload    |--------->| MQ/broker |--------->|Lambda Function    |
-|Service            |          |           |          |check valid doc    |
-+-------------------+          +-----------+          +-------------------+
 ```
 
 # Setup
